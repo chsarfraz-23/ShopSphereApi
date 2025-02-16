@@ -12,7 +12,6 @@ ALLOWED_HOSTS = ["*"]
 
 CORS_ALLOW_ALL_ORIGINS = True
 
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -69,10 +68,7 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly'
-    ]
-}
-
-REST_FRAMEWORK = {
+    ],
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     )
@@ -117,10 +113,7 @@ SIMPLE_JWT = {
     "UPDATE_LAST_LOGIN": True,
 }
 
-MEDIA_URL = "/media/"
-
-MEDIA_ROOT = os.path.join(BASE_DIR, "media")
-
+# SMTP CONFIG
 EMAIL_HOST = os.getenv("EMAIL_HOST", default="smtp.gmail.com")
 EMAIL_HOST_USER = os.getenv("EMAIL_HOST_USER", default="232323sarfrazsaleem@gmail.com")
 EMAIL_HOST_PASSWORD = os.getenv("EMAIL_HOST_PASSWORD", default="fqfk jptc xtra akwq")
@@ -134,4 +127,9 @@ CELERY_RESULT_BACKEND = os.getenv(
 )
 CELERY_TIMEZONE = os.getenv("CELERY_TIMEZONE", default="UTC")
 
+# AUTH USER CONFIG
 AUTH_USER_MODEL = "Api.User"
+
+# MEDIA CONFIG
+MEDIA_URL = "/media/"
+MEDIA_ROOT = os.path.join(BASE_DIR, "media")
