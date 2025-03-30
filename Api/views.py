@@ -1,12 +1,16 @@
-from rest_framework import generics, viewsets, mixins
+from datetime import datetime
+from django.shortcuts import get_object_or_404
+from rest_framework import generics, viewsets, mixins, views, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
 from Api.models import ProductImage, ProductType, Product
+from Api.models.api_models import DeepSeekRequestResponseModel
 from Api.models.user_model import User
 from Api.serializers import UserSignUpSerializer, ProductImageSerializer, ProductTypeSerializer, \
-    ProductReadOnlySerializer, ProductSerializer, AuthUserActionsSerializer
+    ProductReadOnlySerializer, ProductSerializer, AuthUserActionsSerializer, DeepSeekAPIViewSerializer
+from Backend_Api.pagination import IncludePageSizePagination
 
 
 class UserSignUp(generics.CreateAPIView):
@@ -52,5 +56,31 @@ class ProductView(viewsets.ModelViewSet):
         if self.action in ["create", "update", "partial_update"]:
             return self.serializer_class_write_only
         return self.serializer_class_read_only
+
+
+class DeepSeekApiView(views.APIView):
+    pagination_class = IncludePageSizePagination()
+    permission_classes = (IsAuthenticated,)
+
+    def post(self, request, *args, **kwargs):
+        start_time = datetime.now()
+        serializer = DeepSeekAPIViewSerializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        instance = serializer.save()
+        end_time = datetime.now()
+        instance.response_in_seconds = int((end_time - start_time).seconds)
+        instance.save()
+        return Response(DeepSeekAPIViewSerializer(instance).data, status=status.HTTP_201_CREATED)
+
+    def get(self, request, pk=None):
+        if not pk:
+            queryset = DeepSeekRequestResponseModel.objects.all().order_by("-created_at")
+            paginated_query_set = self.pagination_class.paginate_queryset(queryset, request)
+            serializer = DeepSeekAPIViewSerializer(paginated_query_set, many=True)
+            return self.pagination_class.get_paginated_response(serializer.data)
+
+        deepseek_request_response_model = get_object_or_404(DeepSeekRequestResponseModel, id=pk)
+        serializer = DeepSeekAPIViewSerializer(deepseek_request_response_model)
+        return Response(data=serializer.data, status=status.HTTP_200_OK)
 
 

@@ -1,7 +1,8 @@
 from django.contrib import admin
 from django.contrib.admin import register
 
-from Api.models import User, ProductType, Product
+from Api.models import User, ProductType, Product, ProductImage
+from Api.models.api_models import DeepSeekRequestResponseModel
 
 
 @register(User)
@@ -75,3 +76,17 @@ class ProductAdmin(admin.ModelAdmin):
     )
     list_filter = ("is_active",)
     list_select_related = ("type",)
+
+
+@register(ProductImage)
+class ProductImagesAdmin(admin.ModelAdmin):
+    list_display = ("id", "image",)
+    search_fields = ("id",)
+
+
+@register(DeepSeekRequestResponseModel)
+class DeepSeekRequestResponseModelAdmin(admin.ModelAdmin):
+    list_display = ("id", "query", "answer", "is_active",)
+    search_fields = ("id", "query", "answer",)
+    list_filter = ("is_active",)
+
