@@ -1,4 +1,5 @@
 from django.db import models
+from django_userforeignkey.models.fields import UserForeignKey
 from shortuuid.django_fields import ShortUUIDField
 
 
@@ -13,14 +14,14 @@ class AuditTrailDateTimeOnly(models.Model):
 
 class AuditTrailModel(AuditTrailDateTimeOnly):
     id = ShortUUIDField(primary_key=True)
-    created_by = models.ForeignKey(
+    created_by = UserForeignKey(
         "User",
         blank=True,
         null=True,
         related_name="%(class)s_created",
         on_delete=models.CASCADE,
     )
-    modified_by = models.ForeignKey(
+    modified_by = UserForeignKey(
         "User",
         null=True,
         blank=True,
