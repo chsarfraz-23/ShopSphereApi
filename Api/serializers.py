@@ -59,8 +59,13 @@ class ProductImageSerializer(serializers.ModelSerializer):
 
 class ProductSerializer(serializers.ModelSerializer):
     type = serializers.PrimaryKeyRelatedField(required=True, queryset=ProductType.objects.all())
-    product_images = serializers.PrimaryKeyRelatedField(required=False, many=True, allow_null=True,
-                                                        queryset=ProductImage)
+    images = serializers.PrimaryKeyRelatedField(
+        required=False,
+        allow_null=True,
+        allow_empty=True,
+        many=True,
+        queryset=ProductImage.objects.all()
+    )
     is_active = serializers.BooleanField(required=False, default=True)
 
     class Meta:
@@ -78,7 +83,7 @@ class ProductSerializer(serializers.ModelSerializer):
             "phone_number",
             "is_active",
             "type",
-            "product_images",
+            "images",
             "created_by",
             "modified_by",
             "created_at",
@@ -87,17 +92,17 @@ class ProductSerializer(serializers.ModelSerializer):
 
     def create(self, validate_data):
         validated_data = self.validated_data
-        product_images = self.validated_data.pop("product_images", [])
+        images = self.validated_data.pop("images", [])
         product = Product.objects.create(**validated_data)
-        for product_image in product_images:
-            product.images.add(product_image)
+        for image in images:
+            product.images.add(image)
         product.save()
         return product
 
 
 class ProductReadOnlySerializer(serializers.ModelSerializer):
     type = ProductTypeSerializer(read_only=True)
-    images = ProductImageSerializer(read_only=True)
+    images = ProductImageSerializer(read_only=True, many=True)
 
     class Meta:
         model = Product
