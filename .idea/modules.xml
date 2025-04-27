@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/Backend_Api.iml" filepath="$PROJECT_DIR$/.idea/Backend_Api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/ShopSphereApi.iml" filepath="$PROJECT_DIR$/.idea/ShopSphereApi.iml" />
     </modules>
   </component>
 </project>

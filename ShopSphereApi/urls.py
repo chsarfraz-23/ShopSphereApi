@@ -4,9 +4,9 @@ from django.urls import path, include
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from Api import urls as api_urls
 from Api.views import DeepSeekApiView
-from Backend_Api import settings
+from ShopSphereApi import settings
 
-admin.site.site_header = "Chachu Super Store API Admin"
+admin.site.site_header = "ShopSphereApi Store API Admin"
 
 urlpatterns = [
     path("api/", include(api_urls)),

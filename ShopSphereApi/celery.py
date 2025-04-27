@@ -3,9 +3,9 @@ import os
 from celery import Celery
 from django.conf import settings
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'Backend_Api.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'ShopSphereApi.settings')
 
-app = Celery('Backend_Api')
+app = Celery('ShopSphereApi')
 
 app.config_from_object('django.conf:settings', namespace='CELERY')
 

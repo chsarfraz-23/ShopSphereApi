@@ -3,7 +3,7 @@ from rest_framework import serializers
 
 from Api.models import User, ProductType, Product, ProductImage
 from Api.models.api_models import DeepSeekRequestResponseModel
-from Backend_Api import settings
+from ShopSphereApi import settings
 
 
 class UserSignUpSerializer(serializers.ModelSerializer):
