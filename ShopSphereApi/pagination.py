@@ -1,7 +1,7 @@
 from rest_framework.pagination import PageNumberPagination, _positive_int
 from rest_framework.response import Response
 
-from Backend_Api import settings
+from ShopSphereApi import settings
 
 
 class IncludePageSizePagination(PageNumberPagination):

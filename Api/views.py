@@ -9,7 +9,7 @@ from Api.models.api_models import DeepSeekRequestResponseModel
 from Api.models.user_model import User
 from Api.serializers import UserSignUpSerializer, ProductImageSerializer, ProductTypeSerializer, \
     ProductReadOnlySerializer, ProductSerializer, AuthUserActionsSerializer, DeepSeekAPIViewSerializer
-from Backend_Api.pagination import IncludePageSizePagination
+from ShopSphereApi.pagination import IncludePageSizePagination
 
 
 class UserSignUp(generics.CreateAPIView):

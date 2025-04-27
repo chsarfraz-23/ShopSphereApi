@@ -43,7 +43,7 @@ MIDDLEWARE = [
     "django.middleware.common.CommonMiddleware",
 ]
 
-ROOT_URLCONF = 'Backend_Api.urls'
+ROOT_URLCONF = 'ShopSphereApi.urls'
 
 TEMPLATES = [
     {
@@ -62,7 +62,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Backend_Api.wsgi.application'
+WSGI_APPLICATION = 'ShopSphereApi.wsgi.application'
 
 DATABASES = {
     'default': {
@@ -75,7 +75,7 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
     ),
-    'DEFAULT_PAGINATION_CLASS': 'Backend_Api.pagination.IncludePageSizePagination',
+    'DEFAULT_PAGINATION_CLASS': 'ShopSphereApi.pagination.IncludePageSizePagination',
     'PAGE_SIZE': 100
 }
 
