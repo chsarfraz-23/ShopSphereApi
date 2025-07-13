@@ -6,7 +6,7 @@ from Api import urls as api_urls
 from Api.views import DeepSeekApiView
 from ShopSphereApi import settings
 
-admin.site.site_header = "ShopSphereApi Store API Admin"
+admin.site.site_header = "ShopSphereApi API Admin"
 
 urlpatterns = [
     path("api/", include(api_urls)),

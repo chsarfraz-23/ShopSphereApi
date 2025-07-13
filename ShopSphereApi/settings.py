@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     'rest_framework',
     "corsheaders",
     'django_userforeignkey',
+    'django_filters',
     'rest_framework_simplejwt',
     'Api'
 ]
@@ -74,6 +75,9 @@ DATABASES = {
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': (
         'rest_framework_simplejwt.authentication.JWTAuthentication',
+    ),
+    'DEFAULT_FILTER_BACKENDS': (
+        'django_filters.rest_framework.DjangoFilterBackend',
     ),
     'DEFAULT_PAGINATION_CLASS': 'ShopSphereApi.pagination.IncludePageSizePagination',
     'PAGE_SIZE': 100
