@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import register
 
 from Api.models import User, ProductType, Product, ProductImage
-from Api.models.api_models import DeepSeekRequestResponseModel
+from Api.models.api_models import DeepSeekRequestResponseModel, CartProductItem
 
 
 @register(User)
@@ -90,3 +90,26 @@ class DeepSeekRequestResponseModelAdmin(admin.ModelAdmin):
     search_fields = ("id", "query", "answer",)
     list_filter = ("is_active",)
 
+
+@register(CartProductItem)
+class CartProductItemAdmin(admin.ModelAdmin):
+    list_display = (
+        "product",
+        "is_ordered",
+        "is_active",
+        "quantity",
+    )
+    search_fields = (
+        "product__name",
+        "cart__created_by__username",
+        "quantity",
+    )
+    list_filter = (
+        "is_ordered",
+        "is_active",
+        "quantity",
+    )
+    list_select_related = (
+        "product",
+    )
+    ordering = ("-created_at",)

@@ -4,11 +4,14 @@ from rest_framework import generics, viewsets, mixins, views, status
 from rest_framework.permissions import IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
+
+from Api.filters import CartProductItemFilter
 from Api.models import ProductImage, ProductType, Product
-from Api.models.api_models import DeepSeekRequestResponseModel
+from Api.models.api_models import DeepSeekRequestResponseModel, CartProductItem
 from Api.models.user_model import User
 from Api.serializers import UserSignUpSerializer, ProductImageSerializer, ProductTypeSerializer, \
-    ProductReadOnlySerializer, ProductSerializer, AuthUserActionsSerializer, DeepSeekAPIViewSerializer
+    ProductReadOnlySerializer, ProductSerializer, AuthUserActionsSerializer, DeepSeekAPIViewSerializer, \
+    CartProductItemSerializer
 from ShopSphereApi.pagination import IncludePageSizePagination
 
 
@@ -55,6 +58,14 @@ class ProductView(viewsets.ModelViewSet):
         if self.action in ["create", "update", "partial_update"]:
             return self.serializer_class_write_only
         return self.serializer_class_read_only
+
+
+class ProductCartItemView(viewsets.ModelViewSet):  #ToDo: Testing remaining
+    pagination_class = IncludePageSizePagination
+    queryset = CartProductItem.objects.all().order_by("-created_at").select_related("product")
+    serializer_class = CartProductItemSerializer
+    filterset_class = CartProductItemFilter
+    permission_classes = (IsAuthenticated,)
 
 
 class DeepSeekApiView(views.APIView):

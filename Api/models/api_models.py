@@ -53,7 +53,18 @@ class DeepSeekRequestResponseModel(AuditTrailModel):
         return f"DeepSeekRequestResponseModel(id={self.id}, query={self.query})"
 
 
+class CartProductItem(AuditTrailModel):
+    id = ShortUUIDField(primary_key=True)
+    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cart_product")
+    is_ordered = models.BooleanField(default=False)
+    is_active = models.BooleanField(default=True)
+    quantity = models.PositiveIntegerField(default=0)
+    is_deleted = models.BooleanField(default=False)
 
+    def __str__(self):
+        return f"ProductCart(id={self.id}, username={self.created_by})"
 
-
-
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['id', 'product'], name="unique_product_cart")
+        ]

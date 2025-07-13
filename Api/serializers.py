@@ -2,7 +2,7 @@ from openai import OpenAI
 from rest_framework import serializers
 
 from Api.models import User, ProductType, Product, ProductImage
-from Api.models.api_models import DeepSeekRequestResponseModel
+from Api.models.api_models import DeepSeekRequestResponseModel, CartProductItem
 from ShopSphereApi import settings
 
 
@@ -141,3 +141,18 @@ class DeepSeekAPIViewSerializer(serializers.ModelSerializer):
         instance = super().create(validated_data)
         return instance
 
+
+class CartProductItemSerializer(serializers.ModelSerializer):
+    products = ProductSerializer(read_only=True, many=True)
+
+    class Meta:
+        model = CartProductItem
+        fields = [
+            "id",
+            "product",
+            "is_ordered",
+            "is_active",
+            "quantity",
+            "products",
+            "is_deleted"
+        ]
