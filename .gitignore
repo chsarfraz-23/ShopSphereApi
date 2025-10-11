@@ -1,0 +1,11 @@
+.venv/
+db.sqlite3
+.env
+venv/
+.pyc
+__pycache__/
+
+#If we are using pycharm
+.idea/
+!.idea/*.iml
+.idea/workspace.xml
