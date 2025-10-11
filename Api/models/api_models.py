@@ -36,7 +36,9 @@ class Product(AuditTrailModel):
     email = models.EmailField(max_length=288, null=True, blank=True)
     phone_number = PhoneNumberField(null=True, blank=True, region="PK")
     is_active = models.BooleanField(default=True)
-    type = models.ForeignKey(ProductType, on_delete=models.CASCADE, related_name="products")
+    type = models.ForeignKey(
+        ProductType, on_delete=models.CASCADE, related_name="products"
+    )
 
     def __str__(self):
         return f"Product(id={self.id}, type={self.name})"
@@ -55,7 +57,9 @@ class DeepSeekRequestResponseModel(AuditTrailModel):
 
 class CartProductItem(AuditTrailModel):
     id = ShortUUIDField(primary_key=True)
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name="cart_product")
+    product = models.ForeignKey(
+        Product, on_delete=models.CASCADE, related_name="cart_product"
+    )
     is_ordered = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     quantity = models.PositiveIntegerField(default=0)
@@ -66,5 +70,7 @@ class CartProductItem(AuditTrailModel):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['id', 'product'], name="unique_product_cart")
+            models.UniqueConstraint(
+                fields=["id", "product", "created_by"], name="unique_product_cart"
+            )
         ]
