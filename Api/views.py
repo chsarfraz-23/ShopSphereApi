@@ -1,7 +1,7 @@
 from datetime import datetime
 from django.shortcuts import get_object_or_404
 from rest_framework import generics, viewsets, mixins, views, status
-from rest_framework.permissions import IsAdminUser
+from rest_framework.permissions import IsAdminUser, AllowAny
 from rest_framework.response import Response
 from rest_framework_simplejwt.tokens import RefreshToken
 
@@ -25,6 +25,7 @@ from ShopSphereApi.pagination import IncludePageSizePagination
 class UserSignUp(generics.CreateAPIView):
     serializer_class = UserSignUpSerializer
     queryset = User.objects.all()
+    permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)

@@ -9,3 +9,6 @@ __pycache__/
 .idea/
 !.idea/*.iml
 .idea/workspace.xml
+.idea/ShopSphereApi.iml
+.idea/dataSources.local.xml
+.idea/dataSources
