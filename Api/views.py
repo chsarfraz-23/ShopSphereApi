@@ -7,7 +7,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 
 from Api.filters import CartProductItemFilter
 from Api.models import ProductImage, ProductType, Product
-from Api.models.api_models import DeepSeekRequestResponseModel, CartProductItem
+from Api.models.api_models import DeepSeekRequestResponseModel, CartProducts, Cart
 from Api.models.user_model import User
 from Api.serializers import (
     UserSignUpSerializer,
@@ -17,7 +17,7 @@ from Api.serializers import (
     ProductSerializer,
     AuthUserActionsSerializer,
     DeepSeekAPIViewSerializer,
-    CartProductItemSerializer,
+    CartProductsSerializer, CartSerializer,
 )
 from ShopSphereApi.pagination import IncludePageSizePagination
 
@@ -65,13 +65,24 @@ class ProductView(viewsets.ModelViewSet):
         return self.serializer_class_read_only
 
 
-class ProductCartItemView(viewsets.ModelViewSet):
+class CartProductsView(viewsets.ModelViewSet):
     pagination_class = IncludePageSizePagination
     queryset = (
-        CartProductItem.objects.all().order_by("-created_at").select_related("product")
+        CartProducts.objects.all().order_by("-created_at").select_related("product", "cart")
     )
-    serializer_class = CartProductItemSerializer
+    serializer_class = CartProductsSerializer
     filterset_class = CartProductItemFilter
+
+
+class CartView(viewsets.ModelViewSet):
+    serializer_class = CartSerializer
+    http_method_names = ["get"]
+
+    def get_queryset(self):
+        return Cart.objects.filter(user=self.request.user)
+
+    def get_object(self):
+        return self.request.user.cart
 
 
 class DeepSeekApiView(views.APIView):

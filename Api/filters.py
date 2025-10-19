@@ -1,14 +1,14 @@
 from django.db.models import Q
 from django_filters import rest_framework as filters
 
-from Api.models.api_models import CartProductItem
+from Api.models.api_models import    CartProducts
 
 
 class CartProductItemFilter(filters.FilterSet):
     search = filters.CharFilter(method="apply_search_filter")
 
     class Meta:
-        model = CartProductItem
+        model = CartProducts
         fields = ["search"]
 
     def apply_search_filter(self, queryset, name, value):
