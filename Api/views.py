@@ -48,8 +48,11 @@ class ProductImageView(viewsets.ModelViewSet):
 class ProductTypeView(viewsets.ModelViewSet):
     queryset = ProductType.objects.all().order_by("-created_at")
     serializer_class = ProductTypeSerializer
-    permission_classes = (IsAdminUser,)
 
+    def get_permissions(self):
+        if self.action == "create":
+            return [IsAdminUser()]
+        return super().get_permissions()
 
 class ProductView(viewsets.ModelViewSet):
     queryset = Product.objects.all().order_by("-created_at")
@@ -62,7 +65,7 @@ class ProductView(viewsets.ModelViewSet):
         return self.serializer_class_read_only
 
 
-class ProductCartItemView(viewsets.ModelViewSet):  # ToDo: Testing remaining
+class ProductCartItemView(viewsets.ModelViewSet):
     pagination_class = IncludePageSizePagination
     queryset = (
         CartProductItem.objects.all().order_by("-created_at").select_related("product")
