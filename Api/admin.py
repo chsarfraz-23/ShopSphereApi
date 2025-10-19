@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.admin import register
 
 from Api.models import User, ProductType, Product, ProductImage
-from Api.models.api_models import DeepSeekRequestResponseModel, CartProductItem
+from Api.models.api_models import DeepSeekRequestResponseModel, CartProducts, Cart
 
 
 @register(User)
@@ -91,25 +91,39 @@ class DeepSeekRequestResponseModelAdmin(admin.ModelAdmin):
     list_filter = ("is_active",)
 
 
-@register(CartProductItem)
-class CartProductItemAdmin(admin.ModelAdmin):
+@admin.register(CartProducts)
+class CartProductsAdmin(admin.ModelAdmin):
     list_display = (
+        "cart",
         "product",
+        "quantity",
         "is_ordered",
         "is_active",
-        "quantity",
+        "is_deleted",
+        "created_at",
+        "added_at"
     )
     search_fields = (
+        "cart__id",
         "product__name",
-        "cart__created_by__username",
-        "quantity",
+        "product__id",
     )
     list_filter = (
         "is_ordered",
         "is_active",
-        "quantity",
-    )
-    list_select_related = (
-        "product",
+        "is_deleted",
     )
     ordering = ("-created_at",)
+    list_select_related = ("cart_item", "product")
+
+
+@admin.register(Cart)
+class CartAdmin(admin.ModelAdmin):
+    list_display = ('id', 'user', 'created_at', 'updated_at')
+    search_fields = ('id', 'user__username', 'user__email')
+    ordering = ('-created_at',)
+    readonly_fields = ('created_at', 'updated_at')
+
+    def has_add_permission(self, request):
+        """Prevent adding carts manually since they are usually auto-created."""
+        return True  # Change to False if carts are automatically generated

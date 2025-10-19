@@ -1,8 +1,9 @@
+from django.db import transaction
 from openai import OpenAI
 from rest_framework import serializers
 
 from Api.models import User, ProductType, Product, ProductImage
-from Api.models.api_models import DeepSeekRequestResponseModel, CartProductItem
+from Api.models.api_models import DeepSeekRequestResponseModel, CartProducts, Cart
 from ShopSphereApi import settings
 
 
@@ -142,17 +143,38 @@ class DeepSeekAPIViewSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CartProductItemSerializer(serializers.ModelSerializer):
-    products = ProductSerializer(read_only=True, many=True)
-
+class CartProductsSerializer(serializers.ModelSerializer):
+    product = ProductSerializer(read_only=True)
+    product_id = serializers.PrimaryKeyRelatedField(
+        queryset=Product.objects.all(),
+        source="product",
+        write_only=True
+    )
+    cart_id = serializers.PrimaryKeyRelatedField(
+        queryset=Cart.objects.all(),
+        source="cart",
+        write_only=True
+    )
     class Meta:
-        model = CartProductItem
+        model = CartProducts
         fields = [
             "id",
             "product",
-            "is_ordered",
-            "is_active",
+            "product_id",
             "quantity",
-            "products",
-            "is_deleted"
+            "added_at",
+            "is_active",
+            "is_ordered",
+            "is_deleted",
+            "cart_id"
         ]
+        read_only_fields = ["id", "added_at"]
+
+
+class CartSerializer(serializers.ModelSerializer):
+    cart_items = CartProductsSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = Cart
+        fields = ["id", "user", "cart_items"]
+        read_only_fields = ["user"]

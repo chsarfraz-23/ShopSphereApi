@@ -1,4 +1,5 @@
 from django.db import models
+from django.conf import settings
 from phonenumber_field.modelfields import PhoneNumberField
 from shortuuid.django_fields import ShortUUIDField
 
@@ -55,22 +56,32 @@ class DeepSeekRequestResponseModel(AuditTrailModel):
         return f"DeepSeekRequestResponseModel(id={self.id}, query={self.query})"
 
 
-class CartProductItem(AuditTrailModel):
-    id = ShortUUIDField(primary_key=True)
-    product = models.ForeignKey(
-        Product, on_delete=models.CASCADE, related_name="cart_product"
-    )
+class CartProducts(AuditTrailModel):
+    id = ShortUUIDField(primary_key=True, editable=False, db_index=True)
+    cart = models.ForeignKey("Cart", on_delete=models.CASCADE, related_name="cart_products")
+    product = models.ForeignKey("Product", on_delete=models.CASCADE, related_name="product_cart")
     is_ordered = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
-    quantity = models.PositiveIntegerField(default=0)
+    added_at = models.DateTimeField(auto_now_add=True)
+    quantity = models.PositiveIntegerField(default=1)
     is_deleted = models.BooleanField(default=False)
 
     def __str__(self):
-        return f"ProductCart(id={self.id}, username={self.created_by})"
+        return f"{self.cart} - {self.product}"
 
     class Meta:
-        constraints = [
-            models.UniqueConstraint(
-                fields=["id", "product", "created_by"], name="unique_product_cart"
-            )
-        ]
+        unique_together = ("cart", "product")
+
+
+class Cart(models.Model):
+    id = ShortUUIDField(primary_key=True, editable=False, db_index=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="cart"
+    )
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return f"Cart of {self.user.username}"
